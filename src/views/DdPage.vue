@@ -11,7 +11,8 @@
       </div>
 
       <div style="height: 100px;color: #8b0074"/>
-      <el-button type="primary" @click="save">保存</el-button>
+      <el-button type="primary" @click="save">保存</el-button><br>
+      <el-input v-model="titleNew" placeholder="请输入问卷标题" clearable style="width: 50%;margin: 10px">{{titleNew}}</el-input>
       <!-- 操作渲染结果 delay解决在手机上操作按钮点击不到的问题 -->
       <VueDraggable v-model="listNew" animation="150" group="mang" ghostClass="ghost" :delay="200">
         <div v-for="(item, index) in listNew" :key="item.id">
@@ -75,7 +76,7 @@ import {Delete, CirclePlus} from '@element-plus/icons-vue'
 import MangRadio from '../components/MangRadio.vue';
 import MangCheckbox from '../components/MangCheckbox.vue';
 import MangInput from '../components/MangInput.vue';
-import clone,{ listNew } from '../ts/Clone';
+import clone,{ listNew,titleNew } from '../ts/Clone';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 
@@ -85,13 +86,13 @@ const route = useRoute();
 
 // 初始化数据
 onMounted(() => {
-  // 获取路由参数 http://192.168.17.195:8080/show?id=100
   id.value = route.query.id ? String(route.query.id) : 'my_key';
   axios.get(process.env.VUE_APP_BACKEND_URL + '/dd/get_key?key=' + id.value)
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         // 处理成功情况
-        listNew.value = response.data.value;
+        listNew.value = response.data.value.list;
+        titleNew.value = response.data.value.title;
       })
       .catch(function (error) {
         // 处理错误情况
@@ -105,9 +106,12 @@ onMounted(() => {
 function save() {
   console.log(listNew)
   // 使用 process.env 访问环境变量
-  axios.post(process.env.VUE_APP_BACKEND_URL + '/dd/set_key', {
-    key: 'my_key',
-    value: listNew.value,
+  axios.post(process.env.VUE_APP_BACKEND_URL + '/dd/set_zkey', {
+    key: id.value,
+    value: {
+      title: titleNew.value,
+      list: listNew.value
+    },
   }).then(function (response) {
       console.log(response);
     }).catch(function (error) {
@@ -118,7 +122,6 @@ function save() {
 // 假设listNew是一个响应式引用（如Vue 3中的ref）
 // 你需要确保它在外部被定义和初始化
 // let listNew = ref([]);
-
 function addOption(itemId: number) {
   console.log(itemId);
   listNew.value.map(item => {
@@ -173,6 +176,12 @@ function deleteOption(itemId: number, optionId: string) {
 
 function remove(index: number) {
   listNew.value.splice(index, 1)
+  // 重新生成ID 排序
+  if (listNew.value.length > 0){
+    for (let i = 0; i < listNew.value.length; i++) {
+      listNew.value[i].id = i+1;
+    }
+  }
 }
 </script>
 

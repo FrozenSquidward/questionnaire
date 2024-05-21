@@ -12,10 +12,10 @@ const listDefault = ref([
         ]
     }
 ])
-
+export const titleNew = ref('一份问卷')
 export const listNew = ref(
     listDefault.value.map(item => ({
-        name: `${item.name}-2`,
+        name: `${item.name}-1`,
         id: item.id,
         type: `${item.type}`,
         // 结果值
@@ -34,13 +34,13 @@ interface Option {
 }
 
 export default function clone(element: { name: string; id: number; type: string; value: string; options: Option[]}) {
-    const len = listNew.value.length
+    const len = listNew.value.length+1
     console.log("=================Add element=================")
 
     if (element.type === 'radio'){
         return {
             name: `${element.name}-clone-${len}`,
-            id: `${len}`,
+            id: len,
             type: `${element.type}`,
             options: element.options.map((option: { id: number; name: string; }) => ({
                 id: `${option.id}`,
@@ -50,7 +50,7 @@ export default function clone(element: { name: string; id: number; type: string;
     }else if (element.type === 'checkbox'){
         return {
             name: `${element.name}-clone-${len}`,
-            id: `${len}`,
+            id: len,
             type: `${element.type}`,
             value: element.value,
             options: element.options.map((option: { id: number; name: string; }) => ({
@@ -61,7 +61,7 @@ export default function clone(element: { name: string; id: number; type: string;
     } else if (element.type === 'input'){
         return {
             name: `${element.name}-clone-${len}`,
-            id: `${len+1}`,
+            id: len,
             type: `${element.type}`,
             value: `${element.value}`
         }

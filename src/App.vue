@@ -1,19 +1,14 @@
 <template>
-  <water-mark>
-    <router-link to="/Dd">Go to Dd</router-link>
-    <router-link to="/show">Go to Show</router-link>
     <router-view/>
-  </water-mark>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import WaterMark from "@/components/WaterMark.vue"
-import DdPage from './views/DdPage.vue';
+import ListPage from "@/views/ListPage.vue";
 
 @Options({
   components: {
-    WaterMark, DdPage
+    ListPage
   },
 })
 export default class App extends Vue {}

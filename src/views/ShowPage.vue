@@ -1,7 +1,9 @@
 <template>
-  <div class="flex">
-    <div class="grid-container1">
-      <div style="height: 200px;color: #8b0074"/>
+  <water-mark>
+    <div class="flex">
+      <div class="grid-container1">
+        <div style="height: 200px;color: #8b0074"/>
+        <h2>{{title}}</h2>
         <div v-for="(item) in listGet" :key="item.id">
           <el-card class="grid-card" shadow="always">
             <div class="dd" >
@@ -36,21 +38,23 @@
             </div>
           </el-card>
         </div>
-      <el-button type="primary" @click="submit">提交</el-button>
+        <el-button type="primary" @click="submit">提交</el-button>
+      </div>
     </div>
-  </div>
-
+  </water-mark>
 </template>
 
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import WaterMark from "@/components/WaterMark.vue"
 
 const id = ref<string | null>('my_key');
 // 获取当前路由对象
 const route = useRoute();
 
+let title=ref('');
 let listGet=ref([
   {
     name: '',
@@ -71,7 +75,8 @@ onMounted(() => {
       .then(function (response) {
         console.log(response);
         // 处理成功情况
-        listGet.value = response.data.value;
+        listGet.value = response.data.value.list;
+        title.value = response.data.value.title;
       })
       .catch(function (error) {
         // 处理错误情况
