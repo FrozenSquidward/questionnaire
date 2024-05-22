@@ -1,4 +1,4 @@
-// router.js
+// index.js
 import { createRouter, createWebHistory } from 'vue-router';
 
 // 引入组件
@@ -16,9 +16,9 @@ const routes = [
 ];
 
 // 创建router实例
-const router = createRouter({
+const index = createRouter({
     history: createWebHistory(),
     routes,
 });
 
-export default router;
+export default index;

@@ -5,7 +5,7 @@ module.exports = defineConfig({
 // 解决__VUE_PROD_HYDRATION_MISMATCH_DETAILS__问题
 module.exports = {
   // 配置项目根目录,配合nginx配置使用!!!
-  publicPath: process.env.NODE_ENV === "production" ? "/mang/" : "",
+  publicPath: process.env.NODE_ENV === "production" ? "/mang/" : "/",
   chainWebpack: (config) => {
     config.plugin('define').tap((definitions) => {
       Object.assign(definitions[0], {
