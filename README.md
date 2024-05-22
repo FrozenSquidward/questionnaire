@@ -1,5 +1,8 @@
 # dd
 
+不是专业前端！！
+项目可随意使用
+希望有个前端大佬来优化下样式
 ## Project setup
 ```
 npm install
