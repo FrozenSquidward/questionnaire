@@ -16,9 +16,9 @@ const routes = [
 ];
 
 // 创建router实例
-const index = createRouter({
+const router = createRouter({
     history: createWebHistory(),
     routes,
 });
 
-export default index;
+export default router;
