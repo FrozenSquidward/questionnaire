@@ -1,8 +1,21 @@
 <template>
+  <el-dialog
+      v-model="submitDialogVisible"
+      title="提交成功"
+      width="500"
+      align-center
+  >
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="submitDialogVisible = false">确定</el-button>
+      </div>
+    </template>
+  </el-dialog>
+
   <water-mark>
     <div class="flex">
       <div class="grid-container1">
-        <div style="height: 200px;color: #8b0074"/>
+        <div style="height: 10%;color: #8b0074"/>
         <h2>{{title}}</h2>
         <div v-for="(item) in listGet" :key="item.id">
           <el-card class="grid-card" shadow="always">
@@ -54,6 +67,7 @@ const id = ref<string | null>('my_key');
 // 获取当前路由对象
 const route = useRoute();
 
+const submitDialogVisible = ref(false)
 let title=ref('');
 let listGet=ref([
   {
@@ -91,10 +105,17 @@ onMounted(() => {
 * */
 function submit() {
   console.log(listGet)
-  axios.post('http://192.168.136.1:8090/pipi/dd/save', {
-    listGet: listGet.value,
+  // 使用map方法提取id和value
+  const extractedData = listGet.value.map(item => ({
+    id: item.id,
+    value: item.value
+  }));
+  axios.post(process.env.VUE_APP_BACKEND_URL+'/dd/submit', {
+    value: extractedData,
+    key: id.value+':submit',
   }).then(function (response) {
     console.log(response);
+    submitDialogVisible.value=true;
   }).catch(function (error) {
     console.log(error);
   });
