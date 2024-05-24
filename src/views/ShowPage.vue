@@ -19,7 +19,7 @@
         <h2>{{title}}</h2>
         <div v-for="(item) in listGet" :key="item.id">
           <el-card class="grid-card" shadow="always">
-            <div class="dd" >
+            <div class="dd" :class="{ 'highlight': !item.isFilled }">
               <!-- 单选 radio -->
               <div v-if="item.type === 'radio'">
                 <!-- 问题标题 -->
@@ -75,7 +75,8 @@ let listGet=ref([
     id: 0,
     type: '',
     value: '',
-    options: []
+    options: [],
+    isFilled: false
   }
 ]);
 
@@ -105,6 +106,14 @@ onMounted(() => {
 * */
 function submit() {
   console.log(listGet)
+  validateAndHighlight()
+  // 检查是否所有项都已填写
+  if (listGet.value.some(item => !item.isFilled)) {
+    // 如果有未填项，阻止提交并显示错误信息（可选）
+    // alert('有未填写的表单项，请检查并填写完整。');
+    return;
+  }
+
   // 使用map方法提取id和value
   const extractedData = listGet.value.map(item => ({
     id: item.id,
@@ -120,10 +129,36 @@ function submit() {
     console.log(error);
   });
 }
+// 校验并设置 isFilled 状态的函数
+function validateAndHighlight() {
+  listGet.value.forEach(item => {
+    let isFilled = false;
+    if (item.value){
+      if (item.type === 'radio' || item.type === 'checkbox') {
+        // 对于单选和多选，检查是否有选中的值
+        // 假设 item.value 是一个数组（对于复选框），或者一个对象/字符串（对于单选框）
+        if (item.type === 'checkbox') {
+          isFilled = item.value.length > 0; // 检查数组长度
+        } else if (item.type === 'radio') {
+          // 对于单选框，可能需要检查 item.value 是否是一个非空字符串或特定值
+          isFilled = item.value !== '';
+        }
+      } else if (item.type === 'input') {
+        // 对于输入框，检查值是否非空字符串
+        isFilled = item.value.trim() !== '';
+      }
+    }
+    // 对于其他类型，你可能需要添加额外的逻辑
+    item.isFilled = isFilled;
+  });
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.highlight {
+  border: 1px solid red; /* 你可以根据需要自定义高亮样式 */
+}
 .grid-container1 {
   width: 96%;
   /* 设置左右边距 */
