@@ -76,7 +76,7 @@ let listGet=ref([
     type: '',
     value: '',
     options: [],
-    isFilled: false
+    isFilled: true
   }
 ]);
 
@@ -88,9 +88,12 @@ onMounted(() => {
   // console.log(id.value)
   axios.get(process.env.VUE_APP_BACKEND_URL + '/dd/get_key?key=' + id.value)
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         // 处理成功情况
-        listGet.value = response.data.value.list;
+        listGet.value = response.data.value.list.map((item: any) => ({
+          ...item,
+          isFilled: true, // 添加这一行来初始化 isFilled 为 true
+        }));
         title.value = response.data.value.title;
       })
       .catch(function (error) {
@@ -105,10 +108,11 @@ onMounted(() => {
 * 提交数据
 * */
 function submit() {
-  console.log(listGet)
+  // console.log(listGet)
   validateAndHighlight()
   // 检查是否所有项都已填写
   if (listGet.value.some(item => !item.isFilled)) {
+    console.log('有未填写的表单项，请检查并填写完整。')
     // 如果有未填项，阻止提交并显示错误信息（可选）
     // 定位到第一个未答问题
     const firstUnanswered = listGet.value.find(item => !item.isFilled);
