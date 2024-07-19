@@ -46,7 +46,9 @@ watchEffect(() => {
   div.style.backgroundSize = `${styleSize}px ${styleSize}px`;
   div.style.backgroundRepeat = 'repeat';
   div.style.zIndex = 9999;
-  div.style.position = 'absolute';
+  div.style.position = 'fixed';
+  // todo absolute只显示在第一页暂未处理
+  // div.style.position = 'absolute';
   div.style.inset = 0;
   // 元素不会接收鼠标事件，鼠标事件会透过元素传递到下层的元素上
   div.style.pointerEvents = 'none';
