@@ -17,7 +17,7 @@
       <div class="grid-container1">
         <div style="height: 10%;color: #8b0074"/>
         <h2>{{title}}</h2>
-        <div v-for="(item) in listGet" :key="item.id">
+        <div v-for="(item) in listGet" :key="item.id" :id="'question-' + item.id">
           <el-card class="grid-card" shadow="always">
             <div class="dd" :class="{ 'highlight': !item.isFilled }">
               <!-- 单选 radio -->
@@ -110,6 +110,14 @@ function submit() {
   // 检查是否所有项都已填写
   if (listGet.value.some(item => !item.isFilled)) {
     // 如果有未填项，阻止提交并显示错误信息（可选）
+    // 定位到第一个未答问题
+    const firstUnanswered = listGet.value.find(item => !item.isFilled);
+    if (firstUnanswered) {
+      const element = document.getElementById('question-' + firstUnanswered.id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
     // alert('有未填写的表单项，请检查并填写完整。');
     return;
   }
