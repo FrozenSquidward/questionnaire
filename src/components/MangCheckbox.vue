@@ -23,6 +23,7 @@ const list2 = ref([
     id: 2,
     type: 'checkbox',
     value: [],
+    required: false,
     options: [
       {id: 'A', name: 'AA选项'},
       {id: 'B', name: 'BB选项'},

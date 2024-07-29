@@ -18,6 +18,10 @@
         <div v-for="(item, index) in listNew" :key="item.id">
           <el-card class="grid-card" shadow="always">
             <div class="dd">
+              <div @click="toggleRequired(item.id)">
+                <el-icon v-if="item.required === true" color="red"><StarFilled /></el-icon>
+                <el-icon v-else><Star /></el-icon>
+              </div>
               <!-- 单选 radio -->
               <div v-if="item.type === 'radio'">
                 <el-radio-group v-model="item.value">
@@ -72,7 +76,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import { VueDraggable } from 'vue-draggable-plus';
-import {Delete, CirclePlus} from '@element-plus/icons-vue'
+import {Delete, CirclePlus, Star, StarFilled} from '@element-plus/icons-vue'
 import MangRadio from '../components/MangRadio.vue';
 import MangCheckbox from '../components/MangCheckbox.vue';
 import MangInput from '../components/MangInput.vue';
@@ -104,7 +108,12 @@ onMounted(() => {
 })
 
 function save() {
-  console.log(listNew)
+  // console.log(listNew)
+  // listNew.value.map(item => {
+  //   if (!item.required){
+  //     item.required = false;
+  //   }
+  // });
   // 使用 process.env 访问环境变量
   axios.post(process.env.VUE_APP_BACKEND_URL + '/dd/set_zkey', {
     key: id.value,
@@ -170,6 +179,12 @@ function deleteOption(itemId: number, optionId: string) {
     }
   } else {
     console.warn(`No item found with id: ${itemId}`);
+  }
+}
+function toggleRequired(itemId: number){
+  const item = listNew.value.find(item => item.id === itemId);
+  if (item) {
+    item.required = !item.required;
   }
 }
 // -----------------

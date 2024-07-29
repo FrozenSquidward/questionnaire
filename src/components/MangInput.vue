@@ -18,7 +18,8 @@ const list3 = ref([
     name: '输入框问题',
     id: 11,
     type: 'input',
-    value: ''
+    value: '',
+    required: false
   }
 ])
 </script>

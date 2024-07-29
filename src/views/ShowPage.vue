@@ -19,7 +19,8 @@
         <h2>{{title}}</h2>
         <div v-for="(item) in listGet" :key="item.id" :id="'question-' + item.id">
           <el-card class="grid-card" shadow="always">
-            <div class="dd" :class="{ 'highlight': !item.isFilled }">
+            <div class="dd" :class="{ 'highlight': !item.isFilled}">
+              <el-icon v-if="item.required === true" color="red"><StarFilled /></el-icon>
               <!-- 单选 radio -->
               <div v-if="item.type === 'radio'">
                 <!-- 问题标题 -->
@@ -62,6 +63,7 @@ import {onMounted, ref} from "vue";
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import WaterMark from "@/components/WaterMark.vue"
+import {StarFilled} from '@element-plus/icons-vue'
 
 const id = ref<string | null>('my_key');
 // 获取当前路由对象
@@ -76,7 +78,8 @@ let listGet=ref([
     type: '',
     value: '',
     options: [],
-    isFilled: true
+    isFilled: true,
+    required: false
   }
 ]);
 
@@ -114,8 +117,8 @@ function submit() {
   if (listGet.value.some(item => !item.isFilled)) {
     console.log('有未填写的表单项，请检查并填写完整。')
     // 如果有未填项，阻止提交并显示错误信息（可选）
-    // 定位到第一个未答问题
-    const firstUnanswered = listGet.value.find(item => !item.isFilled);
+    // 定位到第一个未答的必填问题
+    const firstUnanswered = listGet.value.find(item => !item.isFilled && item.required);
     if (firstUnanswered) {
       const element = document.getElementById('question-' + firstUnanswered.id);
       if (element) {
@@ -144,6 +147,11 @@ function submit() {
 // 校验并设置 isFilled 状态的函数
 function validateAndHighlight() {
   listGet.value.forEach(item => {
+    // 自动跳过不必填
+    if (!item.required){
+      item.isFilled = true;
+      return;
+    }
     let isFilled = false;
     if (item.value){
       if (item.type === 'radio' || item.type === 'checkbox') {

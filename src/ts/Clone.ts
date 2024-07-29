@@ -6,6 +6,7 @@ const listDefault = ref([
         id: 1,
         type: 'radio',
         value: '',
+        required: false,
         options: [
             {id: 'A', name: '选项A'},
             {id: 'B', name: '选项B'}
@@ -20,6 +21,7 @@ export const listNew = ref(
         type: `${item.type}`,
         // 结果值
         value: `${item.value}`,//item.value as any,
+        required: item.required,
         // 逐个赋值options，保持为数组形式
         options: item.options.map(option => ({
             id: `${option.id}`,
@@ -33,7 +35,7 @@ interface Option {
     name: string;
 }
 
-export default function clone(element: { name: string; id: number; type: string; value: string; options: Option[]}) {
+export default function clone(element: { name: string; id: number; type: string; value: string; required: boolean; options: Option[]}) {
     const len = listNew.value.length+1
     console.log("=================Add element=================")
 
@@ -42,6 +44,7 @@ export default function clone(element: { name: string; id: number; type: string;
             name: `${element.name}-clone-${len}`,
             id: len,
             type: `${element.type}`,
+            required: element.required,
             options: element.options.map((option: { id: number; name: string; }) => ({
                 id: `${option.id}`,
                 name: `${option.name}`
@@ -53,6 +56,7 @@ export default function clone(element: { name: string; id: number; type: string;
             id: len,
             type: `${element.type}`,
             value: element.value,
+            required: element.required,
             options: element.options.map((option: { id: number; name: string; }) => ({
                 id: `${option.id}`,
                 name: `${option.name}`
@@ -63,7 +67,8 @@ export default function clone(element: { name: string; id: number; type: string;
             name: `${element.name}-clone-${len}`,
             id: len,
             type: `${element.type}`,
-            value: `${element.value}`
+            value: `${element.value}`,
+            required: element.required
         }
     }
 }

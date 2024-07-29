@@ -23,6 +23,7 @@ const list1 = ref([
     id: 1,
     type: 'radio',
     value: '',
+    required: false,
     options: [
       {id: 'A', name: '选项A'},
       {id: 'B', name: '选项B'}
