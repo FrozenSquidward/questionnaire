@@ -64,6 +64,8 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import WaterMark from "@/components/WaterMark.vue"
 import {StarFilled} from '@element-plus/icons-vue'
+import getInfo from '../ts/DeviceInfo';
+import {DeviceUUID} from "@/ts/DeviceUUID";
 
 const id = ref<string | null>('my_key');
 // 获取当前路由对象
@@ -85,6 +87,22 @@ let listGet=ref([
 
 // 初始化数据
 onMounted(() => {
+  // 添加一个访问计数
+  const uuid = DeviceUUID.getUUID();
+  const info = getInfo();
+  axios.get(process.env.VUE_APP_BACKEND_URL + '/dd/increment_score?key=' + info.OS + '-'  + info.isMobile + '-' + uuid)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        // 处理错误情况
+        console.log(error);
+      })
+      .finally(function () {
+        // 总是会执行
+      });
+
+
   // 获取路由参数 http://192.168.17.195:8080/show?id=100
   id.value = route.query.id ? String(route.query.id) : 'my_key';
   // console.log('id')
